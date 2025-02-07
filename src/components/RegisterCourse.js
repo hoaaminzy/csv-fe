@@ -28,7 +28,6 @@ export default function RegisterCourse({ student }) {
   const filterRegisterCoursesStudent = registerCourses.filter(
     (item) => item?.inforStudent?.student === student?.student_id
   );
-  console.log(filterRegisterCoursesStudent);
 
   // Chuyển đổi học kỳ thành định dạng `HK1 - YYYY`
   const semesterMapping = schedule.map((item) => {
@@ -79,29 +78,6 @@ export default function RegisterCourse({ student }) {
 
   // Dữ liệu đã gộp
   const mergedCourses = mergeCourses(filteredCourses);
-  const transformData = (courses, selectedCourse) => {
-    if (!selectedCourse) return [];
-
-    return courses
-      .filter((course) => course.course === selectedCourse.course) // Lọc theo course đã chọn
-      .flatMap((course, index) =>
-        course.date.map((date, i) => ({
-          _id: `${course._id}-${i}`,
-          course: course.course,
-          faculty: course.faculty,
-          major: course.major,
-          courseHK: course.courseHK,
-          loaiLichHoc: course.loaiLichHoc,
-          morning: course.morning,
-          afternoon: course.afternoon,
-          evening: course.evening,
-          time: course.time[i] || "",
-          date: date,
-          room: course.room[i] || "",
-          slot: course.slot[i] || "",
-        }))
-      );
-  };
 
   const fetchSchedule = async () => {
     try {
@@ -132,9 +108,7 @@ export default function RegisterCourse({ student }) {
           status: true,
         }
       );
-      if (res.status === 201) {
-        message.success("Đăng ký thành công");
-      }
+      message.success("Đăng ký thành công");
     } catch (error) {
       console.log(error);
     }
@@ -142,8 +116,23 @@ export default function RegisterCourse({ student }) {
 
   const columns = [
     { title: "STT", dataIndex: "_id", render: (_, __, index) => index + 1 },
-    { title: "Tên môn học/học phần", dataIndex: "course" },
-    { title: "Loại lịch học", dataIndex: "loaiLichHoc" },
+    { title: "Tên môn học/học phần", dataIndex: ["course", "name"] },
+
+    {
+      title: "Mã môn",
+      dataIndex: ["course", "code"],
+      key: "code",
+    },
+    {
+      title: "Số tín chỉ",
+      dataIndex: ["course", "credits"],
+      key: "credits",
+    },
+    {
+      title: "Ngày học",
+      dataIndex: "date",
+      key: "date",
+    },
     {
       title: "Bắt buộc",
       dataIndex: "loaiLichHoc",
@@ -153,7 +142,7 @@ export default function RegisterCourse({ student }) {
 
   const columnsRegister = [
     { title: "STT", dataIndex: "_id", render: (_, __, index) => index + 1 },
-    { title: "Tên môn học/học phần", dataIndex: ["course", "course"] },
+    { title: "Tên môn học/học phần", dataIndex: ["course", "course", "name"] },
     {
       title: "Buổi",
       dataIndex: "timed",
@@ -177,9 +166,8 @@ export default function RegisterCourse({ student }) {
       dataIndex: "slot",
       render: (_, record) => {
         const check = registerCourses.filter(
-          (item) => item.course._id === record._id
+          (item) => item?.course?.course._id === record?.course._id
         );
-
         return (
           <>
             <span>
@@ -194,7 +182,7 @@ export default function RegisterCourse({ student }) {
       dataIndex: "status",
       render: (_, record) => {
         const check = filterRegisterCoursesStudent.find(
-          (item) => item.course._id === record._id
+          (item) => item?.course?.course._id === record?.course._id
         );
 
         return (
@@ -226,10 +214,10 @@ export default function RegisterCourse({ student }) {
       dataIndex: "dk",
       render: (_, record) => {
         const check = registerCourses.filter(
-          (item) => item.course._id === record._id
+          (item) => item?.course?.course._id === record?.course._id
         );
         const checka = filterRegisterCoursesStudent.find(
-          (item) => item.course._id === record._id
+          (item) => item?.course?.course._id === record?.course._id
         );
         return (
           <>
@@ -274,7 +262,7 @@ export default function RegisterCourse({ student }) {
       <div className="mt-4">
         <Table
           columns={columns}
-          dataSource={mergedCourses}
+          dataSource={filteredCourses}
           rowKey="_id"
           rowSelection={{
             type: "radio",
@@ -287,7 +275,7 @@ export default function RegisterCourse({ student }) {
           <div className="mt-4">
             <Table
               columns={classColumns}
-              dataSource={transformData(mergedCourses, selectedCourse)}
+              dataSource={[selectedCourse]} // Chuyển object thành mảng chứa 1 phần tử
               rowKey="_id"
               pagination={false}
             />

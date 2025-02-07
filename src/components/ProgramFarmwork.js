@@ -8,18 +8,6 @@ import FixedSidebar from "./FixedSidebar";
 import axios from "axios";
 const { Panel } = Collapse;
 
-const semesters = [
-  { key: "1", name: "Học kỳ 1", credits: 15 },
-  { key: "2", name: "Học kỳ 2", credits: 16 },
-  { key: "3", name: "Học kỳ 3", credits: 19 },
-  { key: "4", name: "Học kỳ 4", credits: 17 },
-  { key: "5", name: "Học kỳ 5", credits: 18 },
-  { key: "6", name: "Học kỳ 6", credits: 21 },
-  { key: "7", name: "Học kỳ 7", credits: 19 },
-  { key: "8", name: "Học kỳ 8", credits: 15 },
-  { key: "9", name: "Học kỳ 9", credits: 12 },
-];
-
 const columns = [
   {
     title: "STT",
@@ -52,6 +40,7 @@ const ProgramFarmwork = ({ student }) => {
           mandatory: true,
           practiceHours: 30,
           credits: 3,
+          _id: "triet123",
         },
         {
           name: "Tư tưởng HCM",
@@ -60,6 +49,7 @@ const ProgramFarmwork = ({ student }) => {
           mandatory: true,
           practiceHours: 30,
           credits: 3,
+          _id: "hcm123",
         },
         {
           name: "Mac Le nin",
@@ -68,6 +58,7 @@ const ProgramFarmwork = ({ student }) => {
           mandatory: true,
           practiceHours: 30,
           credits: 3,
+          _id: "maclenin123",
         },
       ],
     },
@@ -81,6 +72,7 @@ const ProgramFarmwork = ({ student }) => {
           mandatory: true,
           practiceHours: 30,
           credits: 3,
+          _id: "daiso123",
         },
         {
           name: "Giải tích",
@@ -89,6 +81,7 @@ const ProgramFarmwork = ({ student }) => {
           mandatory: true,
           practiceHours: 30,
           credits: 3,
+          _id: "giaitich123",
         },
       ],
     },
@@ -102,6 +95,7 @@ const ProgramFarmwork = ({ student }) => {
           mandatory: true,
           practiceHours: 30,
           credits: 3,
+          _id: "gdcd123",
         },
       ],
     },
@@ -115,6 +109,7 @@ const ProgramFarmwork = ({ student }) => {
           mandatory: true,
           practiceHours: 30,
           credits: 3,
+          _id: "gdtc123",
         },
       ],
     },

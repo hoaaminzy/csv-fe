@@ -4,52 +4,9 @@ import dayjs from "dayjs";
 import { Row, Col } from "react-bootstrap";
 import FixedSidebar from "./FixedSidebar";
 import axios from "axios";
+import isBetween from "dayjs/plugin/isBetween";
 
-const mockData = [
-  {
-    day: "Thứ 2",
-    days: "17/02/2025",
-    morning: {
-      check: "Lịch thi",
-      subject: "Chủ nghĩa xã hội khoa học",
-      class: "22CT3 - SSC10103",
-      period: "Tiết: 7 - 7",
-      room: "Phòng: 205",
-      examTime: "Giờ thi: 14h00",
-    },
-    afternoon: {
-      check: "Lịch học trực tuyến",
-      subject: "Toán cao cấp",
-      class: "22CT3 - MATH10101",
-      period: "Tiết: 8 - 9",
-      room: "Phòng: 301",
-      examTime: "Giờ thi: 16h00",
-    },
-    evening: null,
-  },
-  {
-    day: "Thứ 3",
-    days: "20/02/2025",
-    morning: null,
-    afternoon: {
-      check: "Lịch tạm ngưng",
-      subject: "Lập trình ReactJS",
-      class: "22CT3 - IT10102",
-      period: "Tiết: 5 - 6",
-      room: "Phòng: 102",
-      examTime: "Giờ thi: 13h00",
-    },
-    evening: {
-      check: "Lịch học thực hành",
-      subject: "Cơ sở dữ liệu",
-      class: "22CT3 - IT10103",
-      period: "Tiết: 7 - 8",
-      room: "Phòng: 103",
-      examTime: "Giờ thi: 18h00",
-    },
-  },
-];
-
+dayjs.extend(isBetween);
 const Schedule = ({ student }) => {
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [viewMode, setViewMode] = useState("all");
@@ -70,7 +27,6 @@ const Schedule = ({ student }) => {
     (item) => item?.inforStudent?.student === student?.student_id
   );
 
-  console.log(filterRegisterCoursesStudent);
   const handleDateChange = (date) => {
     setSelectedDate(date || dayjs());
   };
@@ -79,30 +35,6 @@ const Schedule = ({ student }) => {
     const mode = e.target.value;
     setViewMode(mode);
   };
-
-  const filteredData = mockData.map((day) => {
-    // Based on the viewMode, we filter out the periods based on the check value
-    if (viewMode === "schedule") {
-      return {
-        ...day,
-        morning: day.morning?.check.includes("Lịch học") ? day.morning : null,
-        afternoon: day.afternoon?.check.includes("Lịch học")
-          ? day.afternoon
-          : null,
-        evening: day.evening?.check.includes("Lịch học") ? day.evening : null,
-      };
-    } else if (viewMode === "exam") {
-      return {
-        ...day,
-        morning: day.morning?.check.includes("Lịch thi") ? day.morning : null,
-        afternoon: day.afternoon?.check.includes("Lịch thi")
-          ? day.afternoon
-          : null,
-        evening: day.evening?.check.includes("Lịch thi") ? day.evening : null,
-      };
-    }
-    return day; // "all" mode, no filtering
-  });
 
   const handleCurrentDate = () => {
     setSelectedDate(dayjs());
@@ -121,12 +53,28 @@ const Schedule = ({ student }) => {
   };
 
   const renderDayColumn = (day, index) => {
-    const dayCourses = filterRegisterCoursesStudent.filter((data) =>
-      dayjs(data?.course?.date).isSame(
-        selectedDate.startOf("week").add(index - 1, "day"),
-        "day"
-      )
-    );
+    const dayCourses = filterRegisterCoursesStudent.filter((data) => {
+      const startDate = dayjs(data?.course?.date);
+      const endDate = startDate.add(data?.course?.course?.credits * 4, "week");
+
+      // Lấy thứ của ngày bắt đầu
+      const courseDayOfWeek = startDate.day(); // 0: Chủ Nhật, 1: Thứ 2, ..., 6: Thứ 7
+      const selectedDayOfWeek = selectedDate
+        .startOf("week")
+        .add(index - 1, "day")
+        .day();
+
+      // Kiểm tra nếu thứ trong tuần khớp và nằm trong khoảng thời gian học
+      return (
+        selectedDayOfWeek === courseDayOfWeek &&
+        dayjs(selectedDate.startOf("week").add(index - 1, "day")).isBetween(
+          startDate,
+          endDate - 1,
+          "day",
+          "[]"
+        )
+      );
+    });
 
     return (
       <div
@@ -186,7 +134,7 @@ const Schedule = ({ student }) => {
 `}
                     >
                       <span className="text-[13px] font-bold">
-                        {periodCourse.course.course}
+                        {periodCourse?.course?.course?.name}
                       </span>
                       <span className="text-[13px] ">
                         Phòng: {periodCourse.course.room}
@@ -196,13 +144,6 @@ const Schedule = ({ student }) => {
                       </span>
                     </div>
                   ) : (
-                    // <div className="bg-green-200 p-2 rounded-md text-center">
-                    //   <p className="font-medium">
-                    //     {periodCourse.course.course}
-                    //   </p>
-                    //   <p>Phòng: {periodCourse.course.room}</p>
-                    //   <p>Giờ: {periodCourse.course.time}</p>
-                    // </div>
                     <div className="text-gray-400 w-full h-full text-[13px] py-4 flex items-center justify-center text-center">
                       Không có lịch
                     </div>

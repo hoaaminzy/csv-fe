@@ -191,3 +191,6 @@
 .chart .highcharts-axis.highcharts-xaxis {
   display: none !important;
 }
+.menu-dash .ant-btn {
+  padding: 0 5px !important;
+}

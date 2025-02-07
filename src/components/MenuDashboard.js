@@ -7,6 +7,8 @@ import {
   PieChartOutlined,
 } from "@ant-design/icons";
 import { Button, Menu } from "antd";
+import { Link } from "react-router-dom";
+import { CgMenuGridR } from "react-icons/cg";
 const items = [
   {
     key: "1",
@@ -48,15 +50,15 @@ const items = [
     children: [
       {
         key: "10",
-        label: "Kết quả học tập",
+        label: <Link to="/ket-qua-hoc-tap">Kết quả học tập</Link>,
       },
       {
         key: "11",
-        label: "Lịch theo tuần",
+        label: <Link to="/lich-hoc">Lịch theo tuần</Link>,
       },
       {
         key: "12",
-        label: "Lịch theo tiến độ",
+        label: <Link to="/chuong-trinh-khung">Lịch theo tiến độ</Link>,
       },
       {
         key: "13",
@@ -94,11 +96,11 @@ const items = [
     children: [
       {
         key: "18",
-        label: "Chương trình khung",
+        label: <Link to="/chuong-trinh-khung">Chương trình khung</Link>,
       },
       {
         key: "19",
-        label: "Đăng ký học phần",
+        label: <Link to="/dang-ky-hoc-phan">Đăng ký học phần</Link>,
       },
     ],
   },
@@ -110,6 +112,7 @@ const MenuDashboard = () => {
   };
   return (
     <div
+      className="menu-dash"
       style={{
         width: "100%",
       }}
@@ -117,10 +120,14 @@ const MenuDashboard = () => {
       <Button
         onClick={toggleCollapsed}
         style={{
-          marginBottom: 20,
+          marginBottom: 10,
         }}
       >
-        {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+        {collapsed ? (
+          <CgMenuGridR className="text-[30px]" />
+        ) : (
+          <CgMenuGridR className="text-[30px]" />
+        )}
       </Button>
 
       {!collapsed && (
