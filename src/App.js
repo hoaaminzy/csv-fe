@@ -13,6 +13,8 @@ import Schedule from "./components/Schedule";
 import ProgramFarmwork from "./components/ProgramFarmwork";
 import FormProposal from "./components/FormProposal";
 import RegisterCourse from "./components/RegisterCourse";
+import PaymentOnline from "./components/PaymentOnline";
+import StudentDebt from "./components/StudentDebt";
 function App() {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const location = useLocation();
@@ -104,6 +106,14 @@ function App() {
           <Route
             path="/ket-qua-hoc-tap"
             element={<Result student={student} />}
+          />
+          <Route
+            path="/cong-no-sinh-vien"
+            element={<StudentDebt student={student} />}
+          />
+          <Route
+            path="/thanh-toan-truc-tuyen"
+            element={<PaymentOnline student={student} />}
           />
         </Routes>
       </div>

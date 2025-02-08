@@ -13,6 +13,7 @@ export default function RegisterCourse({ student }) {
   const [schedule, setSchedule] = useState([]);
   const [filteredCourses, setFilteredCourses] = useState([]);
   const [registerCourses, setRegisterCourses] = useState([]);
+  const [selectedHK, setSelectedHK] = useState(null);
 
   const fetchRegisterCourses = async () => {
     try {
@@ -25,29 +26,56 @@ export default function RegisterCourse({ student }) {
     }
   };
 
+  useEffect(() => {
+    const fetchOpenSemester = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:8080/api/registrationStatus/get-all"
+        );
+        if (res.data) setSelectedHK(res.data.openSemester);
+      } catch (error) {
+        console.error("Lỗi khi lấy học kỳ mở:", error);
+      }
+    };
+
+    fetchOpenSemester();
+  }, []);
+
   const filterRegisterCoursesStudent = registerCourses.filter(
     (item) => item?.inforStudent?.student === student?.student_id
   );
 
   // Chuyển đổi học kỳ thành định dạng `HK1 - YYYY`
-  const semesterMapping = schedule.map((item) => {
-    const hkNumber = Number(item.courseHK.replace("Học kỳ ", ""));
-    const year = 2024 + Math.floor((hkNumber - 1) / 2);
+  // const semesterMapping = schedule.map((item) => {
+  //   const hkNumber = Number(item.courseHK.replace("Học kỳ ", ""));
+  //   const year = 2024 + Math.floor((hkNumber - 1) / 2);
+  //   const semester = hkNumber % 2 === 1 ? 1 : 2;
+  //   return { ...item, courseHK: `HK${semester} - ${year}` };
+  // });
+
+  const semesterMapping = () => {
+    const semesters = [];
+    const hkNumber = Number(selectedHK?.replace("Học kỳ ", "")); // Chuyển "Học kỳ X" thành số
+    const currentYear = new Date().getFullYear(); // Lấy năm hiện tại
+
+    // Nếu học kỳ lẻ → HK1, nếu chẵn → HK2
     const semester = hkNumber % 2 === 1 ? 1 : 2;
-    return { ...item, courseHK: `HK${semester} - ${year}` };
-  });
+
+    // Nếu học kỳ >= 3 thì tăng năm lên 1
+    const year = currentYear + Math.floor((hkNumber - 1) / 2);
+
+    // Thêm vào danh sách và trả về
+    semesters.push({ courseHK: `HK${semester} - ${year}`, hk: selectedHK });
+
+    return semesters;
+  };
+  const semesterOptions = semesterMapping();
 
   // Loại bỏ trùng lặp cho Select
-  const uniqueSemesters = Array.from(
-    new Set(semesterMapping.map((s) => s.courseHK))
-  );
 
-  // Xử lý khi chọn học kỳ
   const handleSemesterChange = (value) => {
     setSelectedSemester(value);
-    setFilteredCourses(
-      semesterMapping.filter((item) => item.courseHK === value)
-    );
+    setFilteredCourses(schedule?.filter((item) => item.courseHK === value));
   };
 
   const mergeCourses = (courses) => {
@@ -243,9 +271,9 @@ export default function RegisterCourse({ student }) {
           onChange={handleSemesterChange}
           className="w-64"
         >
-          {uniqueSemesters.map((sem) => (
-            <Option key={sem} value={sem}>
-              {sem}
+          {semesterOptions?.map((sem, index) => (
+            <Option key={index} value={sem.hk}>
+              {sem.courseHK}
             </Option>
           ))}
         </Select>

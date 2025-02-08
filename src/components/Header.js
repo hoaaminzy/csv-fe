@@ -52,8 +52,8 @@ const Header = () => {
 
   const handleSubmit = () => {};
   return (
-    <div className="bg-white" style={{ boxShadow: "0px 0px 10px black" }}>
-      <div className="w-1240 h-[70px] flex items-center justify-between ">
+    <div className="bg-white shadow-[10px_10px_10px_rgba(0,0,0,0.5)]">
+      <div className="w-1240 h-[55px] flex items-center justify-between ">
         <div className="flex items-center gap-4">
           <div>
             <Link to="/dashboard">

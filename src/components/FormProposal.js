@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { message } from "antd";
+import { message, Table } from "antd";
 
 import { Col, Row } from "react-bootstrap";
 import FixedSidebar from "./FixedSidebar";
 import { FaDownload } from "react-icons/fa";
+import HeadingTitle from "./HeadingTitle";
 const FormProposal = ({ student }) => {
   const [forms, setForms] = useState([]);
 
@@ -58,10 +59,48 @@ const FormProposal = ({ student }) => {
       message.error("Error fetching forms");
     }
   };
-  // Fetch forms when the component is mounted
   useEffect(() => {
     getAllForms();
   }, []);
+  const dataSource = forms?.map((item, index) => ({
+    key: item._id,
+    index: index + 1,
+    name: item.name,
+    price: "0 VND",
+    _id: item._id,
+  }));
+
+  const columns = [
+    {
+      title: "STT",
+      dataIndex: "index",
+      key: "index",
+      width: 80,
+      align: "center",
+    },
+    {
+      title: "Tên biểu mẫu đề xuất",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Đơn giá",
+      dataIndex: "price",
+      key: "price",
+    },
+    {
+      title: "Tải xuống",
+      dataIndex: "download",
+      key: "download",
+      align: "center",
+      render: (_, record) => (
+        <FaDownload
+          className="cursor-pointer w-full text-center"
+          onClick={() => handleDownload(record._id)}
+        />
+      ),
+    },
+  ];
   return (
     <div className="w-1240 p-2 fix-side" style={{ minHeight: "100vh" }}>
       <Row>
@@ -70,37 +109,13 @@ const FormProposal = ({ student }) => {
         </Col>
         <Col sm={10}>
           <div className="bg-white p-3 rounded-md">
-            <span className="font-bold mb-3 block text-[20px]">
-              Đề xuất biểu mẫu
-            </span>
+            <HeadingTitle title="Đề xuất biểu mẫu" />
             <hr />
-            <table className="data-table">
-              {/* Table Header */}
-              <thead className="h-14">
-                <tr>
-                  <th className="">STT</th>
-                  <th>Tên biểu mẫu đề xuất</th>
-                  <th>Đơn gía</th>
-                  <th></th>
-                </tr>
-              </thead>
-
-              {/* Table Body */}
-              <tbody>
-                {forms?.map((item, index) => {
-                  return (
-                    <tr key={item._id} className="h-8">
-                      <td className="">{index + 1}</td>
-                      <td>{item.name}</td>
-                      <td>0 VND</td>
-                      <td onClick={() => handleDownload(item._id)}>
-                        <FaDownload className="flex justify-center items-center w-full" />
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+            <Table
+              columns={columns}
+              dataSource={dataSource}
+              pagination={false}
+            />
           </div>
         </Col>
       </Row>

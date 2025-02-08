@@ -6,6 +6,7 @@ import "tailwindcss/tailwind.css";
 import { Col, Row } from "react-bootstrap";
 import FixedSidebar from "./FixedSidebar";
 import axios from "axios";
+import HeadingTitle from "./HeadingTitle";
 const { Panel } = Collapse;
 
 const columns = [
@@ -158,14 +159,12 @@ const ProgramFarmwork = ({ student }) => {
   return (
     <div className="w-1240 p-2 fix-side" style={{ minHeight: "100vh" }}>
       <Row>
-        <Col sm={2}>
+        <Col sm={2} className="fside">
           <FixedSidebar />
         </Col>
         <Col sm={10}>
           <div className="bg-white p-3 rounded-md">
-            <span className="font-bold mb-3 block text-[20px]">
-              Chương trình khung
-            </span>
+            <HeadingTitle title="Chương trình khung" />
             <Collapse>
               {mergedSemester?.map((semester, index) => {
                 // Lấy tổng tín chỉ của học kỳ hiện tại

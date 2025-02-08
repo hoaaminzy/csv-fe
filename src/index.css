@@ -194,3 +194,11 @@
 .menu-dash .ant-btn {
   padding: 0 5px !important;
 }
+
+.fixed.left-0.top-24 {
+  z-index: 999999999 !important;
+}
+
+.fside {
+  padding-right: 0px !important;
+}

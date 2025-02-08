@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { CiCalculator1 } from "react-icons/ci";
 import { DownOutlined } from "@ant-design/icons";
 import { Dropdown, Space } from "antd";
 import SolidGaugeChart from "../components/SolidGaugeChart";
@@ -63,7 +62,6 @@ const Dashboard = ({ student }) => {
     }, {})
   );
 
-
   const [selectedSemester, setSelectedSemester] = useState("Chọn năm học");
   const [selectedSemester3, setSelectedSemester3] = useState("Chọn năm học");
   const [abc, setABC] = useState([]);
@@ -116,7 +114,7 @@ const Dashboard = ({ student }) => {
   }));
 
   return (
-    <div className="w-1240 py-3  flex flex-col gap-3 dashboard">
+    <div className="w-1240 py-2  flex flex-col gap-3 dashboard">
       <Row className="h-[242px]">
         <Col sm={7} className="h-full">
           <div className="bg-white h-full p-2 rounded-md">
@@ -294,15 +292,27 @@ const Dashboard = ({ student }) => {
             </Link>
           </div>
           <div className="bg-white  gap-3 w-full h-[130px]  rounded-md flex flex-col justify-center items-center">
-            <IoLogoUsd className="text-[25px] text-[#4da1e7]" />
-            <span className="text-[13px] text-[#667580]">Tra cứu công nợ</span>
+            <Link
+              to="/cong-no-sinh-vien"
+              className="flex flex-col justify-center items-center gap-3"
+            >
+              <IoLogoUsd className="text-[25px] text-[#4da1e7]" />
+              <span className="text-[13px] text-[#667580]">
+                Tra cứu công nợ
+              </span>
+            </Link>
           </div>
 
           <div className="bg-white gap-3 w-full h-[130px]  rounded-md flex flex-col justify-center items-center">
-            <MdPayments className="text-[25px] text-[#4da1e7]" />
-            <span className="text-[13px] text-[#667580]">
-              Thanh toán trực tuyến
-            </span>
+            <Link
+              to="/thanh-toan-truc-tuyen"
+              className="flex flex-col justify-center items-center gap-3"
+            >
+              <MdPayments className="text-[25px] text-[#4da1e7]" />
+              <span className="text-[13px] text-[#667580]">
+                Thanh toán trực tuyến
+              </span>
+            </Link>
           </div>
           <div className="bg-white  gap-3 w-full h-[130px]  rounded-md flex flex-col justify-center items-center">
             <RiLayoutHorizontalLine className="text-[25px] text-[#4da1e7]" />

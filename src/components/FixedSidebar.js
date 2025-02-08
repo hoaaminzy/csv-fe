@@ -92,7 +92,7 @@ const FixedSidebar = () => {
     },
   ];
   return (
-    <div>
+    <div className="">
       <div className="w-[100%] rounded-md bg-white">
         <div
           style={{

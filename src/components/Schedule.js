@@ -5,6 +5,7 @@ import { Row, Col } from "react-bootstrap";
 import FixedSidebar from "./FixedSidebar";
 import axios from "axios";
 import isBetween from "dayjs/plugin/isBetween";
+import HeadingTitle from "./HeadingTitle";
 
 dayjs.extend(isBetween);
 const Schedule = ({ student }) => {
@@ -163,14 +164,14 @@ const Schedule = ({ student }) => {
   return (
     <div className="w-1240" style={{ padding: "12px 0", minHeight: "100vh" }}>
       <Row>
-        <Col sm={2}>
+        <Col sm={2} className="fside">
           <FixedSidebar />
         </Col>
         <Col sm={10} xs={12} className="h-full">
-          <div className="bg-white h-max p-10 rounded-md">
+          <div className="bg-white h-max p-3 rounded-md">
             <div className="">
               <span className="font-bold mb-3 block text-[20px]">
-                Lịch học, lịch thi theo tuần
+                <HeadingTitle title=" Lịch học, lịch thi theo tuần" />
               </span>
               <div className="flex items-center justify-between">
                 <Radio.Group
