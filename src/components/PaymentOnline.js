@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
 import FixedSidebar from "./FixedSidebar";
-import { Dropdown, Space } from "antd";
-import { DownOutlined } from "@ant-design/icons";
 import { TiTick } from "react-icons/ti";
 import axios from "axios";
 
-import { Table, Button, Radio, Select, Tag, message } from "antd";
+import { Table, Select } from "antd";
 import HeadingTitle from "./HeadingTitle";
+import { Link, useNavigate } from "react-router-dom";
 const { Option } = Select;
 
 const PaymentOnline = ({ student }) => {
   const [registerCourses, setRegisterCourses] = useState([]);
   const [filteredCourses, setFilteredCourses] = useState([]);
   const [selectedSemester, setSelectedSemester] = useState("");
+  const [paymentMomo, setPaymentMomo] = useState([]);
 
   const columns = [
     {
@@ -61,7 +61,27 @@ const PaymentOnline = ({ student }) => {
       console.log(error);
     }
   };
+
+  const checkPaymentStudent = paymentMomo.filter(
+    (item) => item.student.student_id === student?.student_id
+  );
+  const filterPayment = checkPaymentStudent.find(
+    (item) => item?.semester === selectedSemester
+  );
+
+  const fetchPaymentMomos = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:8080/api/paymentMomo/get-all-payment"
+      );
+      setPaymentMomo(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
+    fetchPaymentMomos();
     fetchRegisterCourses();
   }, []);
 
@@ -78,6 +98,7 @@ const PaymentOnline = ({ student }) => {
     );
   };
 
+  const navigate = useNavigate();
   const dataSource = filteredCourses?.map((item, index) => ({
     key: index,
     stt: index + 1,
@@ -85,10 +106,30 @@ const PaymentOnline = ({ student }) => {
     name: item?.course?.course?.name,
     credits: item?.course?.course?.credits,
     mandatory: <TiTick className="text-green-400 text-[24px]" />,
-    amount: `${item?.course?.course?.credits * 680000} VNĐ`,
+    amount: `${item?.course?.course?.credits * 680000} VNĐ `,
   }));
 
-  console.log(filteredCourses);
+  const totalAmount = dataSource.reduce((sum, item) => {
+    const numericValue = parseInt(item.amount.replace(/\D/g, ""), 10);
+    return sum + numericValue;
+  }, 0);
+
+  const handlePayment = async () => {
+    try {
+      const res = await axios.post("http://localhost:8080/payment", {
+        courses: filteredCourses,
+        semester: selectedSemester,
+        amount: totalAmount,
+        student: student,
+      });
+      if (res.data.payUrl) {
+        window.location.href = res.data.payUrl;
+      }
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="w-1240" style={{ padding: "12px 0", minHeight: "100vh" }}>
@@ -101,11 +142,16 @@ const PaymentOnline = ({ student }) => {
             <div className="flex justify-between items-center">
               <HeadingTitle title="Thanh toán trực tuyến" />
               <div>
+                <span>Đợt: </span>
                 <Select
                   value={selectedSemester}
                   onChange={handleSemesterChange}
                   className="w-64"
+                  placeholder="Chọn học kỳ"
                 >
+                  <Option value="" disabled>
+                    Chọn học kỳ
+                  </Option>
                   {[
                     ...new Set(
                       filterRegisterCoursesStudent?.map(
@@ -128,6 +174,20 @@ const PaymentOnline = ({ student }) => {
                 pagination={false}
                 footer={() => (
                   <div className="flex flex-col items-start p-2">
+                    {filterPayment ? (
+                      <span className="font-bold">
+                        Đã thanh toán - Kiểm tra hóa đơn{" "}
+                        <Link to={`/phieu-thu`}>tại đây</Link>
+                      </span>
+                    ) : (
+                      <div className="">
+                        Tổng số tiền cần thanh toán:{" "}
+                        <strong className="text-red-500 font-bold">
+                          {totalAmount} VND
+                        </strong>
+                      </div>
+                    )}
+
                     <span>
                       1. Để thanh toán trực tuyến qua ngân hàng{" "}
                       <strong className="text-red-500">thẻ ATM</strong> phải
@@ -149,6 +209,23 @@ const PaymentOnline = ({ student }) => {
                       5. Khuyến cáo thanh toán qua{" "}
                       <strong className="text-red-500">QR-Code</strong>, thẻ ATM
                       nội địa.
+                    </span>
+                    <span>
+                      6. Dễ dàng và tiện lợi khi thanh toán qua
+                      <strong className="text-red-500"> Ví Momo</strong>
+                      {filterPayment ? (
+                        ""
+                      ) : selectedSemester ? (
+                        <span
+                          onClick={handlePayment}
+                          className="cursor-pointer"
+                        >
+                          {" "}
+                          , thanh toán ngay
+                        </span>
+                      ) : (
+                        ""
+                      )}
                     </span>
                   </div>
                 )}

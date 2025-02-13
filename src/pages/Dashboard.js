@@ -20,6 +20,8 @@ import axios from "axios";
 const { Column, ColumnGroup } = Table;
 const Dashboard = ({ student }) => {
   const [points, setPoints] = useState([]);
+  const [registerCourses, setRegisterCourses] = useState([]);
+
   const fetchStudent = async () => {
     try {
       const res = await axios.get(`http://localhost:8080/api/points/point/all`);
@@ -28,13 +30,53 @@ const Dashboard = ({ student }) => {
       console.log(error);
     }
   };
+
+  const fetchRegisterCourses = async () => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:8080/api/registerCourse/get-all-registerCourse"
+      );
+      setRegisterCourses(data);
+    } catch (error) {
+      console.error("Lỗi khi lấy dữ liệu khóa học:", error);
+    }
+  };
+
   useEffect(() => {
+    fetchRegisterCourses();
     fetchStudent();
   }, []);
 
+  function isDateInThisWeek(dateString) {
+    const inputDate = new Date(dateString);
+    const today = new Date();
+
+    // Xác định ngày đầu tiên của tuần (Thứ Hai)
+    const firstDayOfWeek = new Date(today);
+    firstDayOfWeek.setDate(today.getDate() - today.getDay() + 1);
+
+    // Xác định ngày cuối cùng của tuần (Chủ Nhật)
+    const lastDayOfWeek = new Date(firstDayOfWeek);
+    lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6);
+
+    return inputDate >= firstDayOfWeek && inputDate <= lastDayOfWeek;
+  }
+
+  const filteredCourses = registerCourses.filter((item) =>
+    isDateInThisWeek(item.course.date)
+  );
+
+  const filterLoaiLichHoc = filteredCourses.filter(
+    (item) => item.course.loaiLichHoc !== "Lịch thi"
+  );
+
+  const filterLoaiLichThi = filteredCourses.filter(
+    (item) => item.course.loaiLichHoc === "Lịch thi"
+  );
+
   const result = points?.flatMap((item) =>
     item.members
-      .filter((member) => member.mssv === student.student_id)
+      .filter((member) => member?.mssv === student?.student_id)
       .map((member) => ({
         ...member,
         lPHCPhN: item.lPHCPhN,
@@ -115,7 +157,7 @@ const Dashboard = ({ student }) => {
 
   return (
     <div className="w-1240 py-2  flex flex-col gap-3 dashboard">
-      <Row className="h-[242px]">
+      <Row className="sm:h-full md:h-[242px] xl:h-[242px] lg:h-[242px] ">
         <Col sm={7} className="h-full">
           <div className="bg-white h-full p-2 rounded-md">
             <span className="text-[#667580] block pb-2 w-full border-b font-bold text-[20px]">
@@ -130,7 +172,12 @@ const Dashboard = ({ student }) => {
                     className="w-[130px] h-[130px] "
                     style={{ borderRadius: "50%" }}
                   />
-                  <Link to="/thong-tin-sinh-vien">Xem chi tiết</Link>
+                  <Link
+                    to="/thong-tin-sinh-vien"
+                    className="text-[#4da1e7] text-[14px]"
+                  >
+                    Xem chi tiết
+                  </Link>
                 </div>
               </Col>
               <Col sm={5}>
@@ -186,7 +233,7 @@ const Dashboard = ({ student }) => {
             </Row>
           </div>
         </Col>
-        <Col sm={5} className="flex flex-col h-full  gap-3 ">
+        <Col sm={5} className="flex flex-col h-full sm:mt-5  gap-3 ">
           <div className="w-full h-[50%] ">
             <div className="bg-white flex h-full flex-col justify-center p-2.5 rounded-md">
               <span className="text-[13px] text-[#667580]">
@@ -203,8 +250,8 @@ const Dashboard = ({ student }) => {
               <span className="text-[13px] text-[#4da1e7] ">
                 Lịch thi trong tuần
               </span>
-              <span className="text-[30px]">10</span>
-              <Link to="/" className="text-[#4da1e7] text-[13px]">
+              <span className="text-[30px]">{filterLoaiLichThi.length}</span>
+              <Link to="/lich-hoc" className="text-[#4da1e7] text-[13px]">
                 Xem chi tiết
               </Link>
             </div>
@@ -212,43 +259,16 @@ const Dashboard = ({ student }) => {
               <span className="text-[13px] text-[#ff9206]">
                 Lịch học trong tuần
               </span>
-              <span className="text-[30px]">10</span>
-              <Link to="/" className="text-[#ff9206] text-[13px]">
+              <span className="text-[30px]">{filterLoaiLichHoc.length}</span>
+              <Link to="/lich-hoc" className="text-[#ff9206] text-[13px]">
                 Xem chi tiết
               </Link>
             </div>
           </div>
-          {/* <Row className="h-[50%]">
-            <Col sm={12}>
-              <div className="bg-white flex flex-col p-2 px-3 rounded-md">
-                <span className="text-[13px] text-[#667580]">Nhắc nhở mới, chưa xem</span>
-                <span className="text-[30px]">10</span>
-                <Link to="/">Xem chi tiết</Link>
-              </div>
-
-            </Col>
-          </Row>
-          <Row className="h-[50%]  ">
-            <Col sm={6}>
-              <div className="bg-[#e0fbff] text-[#4da1e7] flex flex-col p-2 px-3 rounded-md">
-                <span className="text-[13px] text-[#667580]">Nhắc nhở mới, chưa xem</span>
-                <span className="text-[30px]">10</span>
-                <Link to="/">Xem chi tiết</Link>
-              </div>
-            </Col>
-            <Col sm={6}>
-              {" "}
-              <div className="bg-[#fff2d4] text-[#ff9206] flex flex-col p-2 px-3 rounded-md">
-                <span className="text-[13px] text-[#667580]">Nhắc nhở mới, chưa xem</span>
-                <span className="text-[30px]">10</span>
-                <Link to="/">Xem chi tiết</Link>
-              </div>
-            </Col>
-          </Row> */}
         </Col>
       </Row>
       <Row>
-        <div className="grid grid-cols-8 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-8  xl:grid-cols-8  gap-3">
           <div className="bg-white  gap-3 w-[full] h-[130px]  rounded-md flex flex-col justify-center items-center">
             <Link
               to="/ket-qua-hoc-tap"
@@ -320,11 +340,17 @@ const Dashboard = ({ student }) => {
               Phiếu thu tổng hợp
             </span>
           </div>
+
           <div className="bg-white gap-3 w-full h-[130px]  rounded-md flex flex-col justify-center items-center">
-            <RiWalletFill className="text-[25px] text-[#4da1e7]" />
-            <span className="text-[13px] text-[#667580]">
-              Phiếu thu trực tuyến
-            </span>
+            <Link
+              to="/phieu-thu"
+              className="flex flex-col justify-center items-center gap-3"
+            >
+              <RiWalletFill className="text-[25px] text-[#4da1e7]" />
+              <span className="text-[13px] text-[#667580]">
+                Phiếu thu trực tuyến
+              </span>
+            </Link>
           </div>
         </div>
       </Row>

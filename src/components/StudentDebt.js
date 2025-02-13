@@ -3,7 +3,9 @@ import { Col, Row } from "react-bootstrap";
 import FixedSidebar from "./FixedSidebar";
 import { Table, Typography, Divider } from "antd";
 import { FaCheckCircle } from "react-icons/fa";
+import { IoIosCloseCircle } from "react-icons/io";
 import axios from "axios";
+import dayjs from "dayjs";
 const { Title } = Typography;
 
 const processData = (data) => {
@@ -20,9 +22,26 @@ const processData = (data) => {
   return groupedData;
 };
 
-const StudentDebt = () => {
+const StudentDebt = ({ student }) => {
   const [registerCourses, setRegisterCourses] = useState([]);
+  const [paymentBy, setPaymentBy] = useState([]);
+  useEffect(() => {
+    if (!student?.student_id) return; // Chỉ gọi API nếu có student_id
 
+    const fetcHById = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:8080/api/paymentMomo/payment/${student.student_id}`
+        );
+        console.log(res);
+        setPaymentBy(res.data); // Lưu dữ liệu vào state
+      } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu:", error);
+      }
+    };
+
+    fetcHById();
+  }, [student?.student_id]);
   const fetchRegisterCourses = async () => {
     try {
       const res = await axios.get(
@@ -37,7 +56,6 @@ const StudentDebt = () => {
     fetchRegisterCourses();
   }, []);
   const groupedData = processData(registerCourses);
-
   const columns = [
     {
       title: "STT",
@@ -122,18 +140,24 @@ const StudentDebt = () => {
         ...courses.map((item, index) => ({
           key: `${semesterIndex}-${index}`,
           dot: index + 1,
-          courseCode: item.course.course.code,
-          courseName: item.course.course.name,
-          credits: item.course.course.credits,
-          mucphi: item.course.course.credits * 680000,
+          courseCode: item?.course.course.code,
+          courseName: item?.course.course.name,
+          credits: item?.course.course.credits,
+          mucphi: item?.course.course.credits * 680000,
           stmg: 0,
-          mucnap: item.course.course.credits * 680000,
-          ngaynap: "23-2-2002",
+          mucnap: item?.course.course.credits * 680000,
+          ngaynap: dayjs(item?.datePayment).format("DD-MM-YYYY"),
           sotiennap: item.course.course.credits * 680000,
           khautru: 0,
           truno: 0,
-          congno: 0,
-          trangthai: <FaCheckCircle className="text-green-500 text-[20px] text-center w-full"/>,
+          congno: item?.paymentStatus
+            ? 0
+            : item?.course?.course?.credits * 680000,
+          trangthai: item?.paymentStatus ? (
+            <FaCheckCircle className="text-green-500 text-[20px] text-center w-full" />
+          ) : (
+            <IoIosCloseCircle className="text-red-500 text-[24px] text-center w-full" />
+          ),
           date: item.course.date,
           slot: item.course.slot,
         })),

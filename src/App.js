@@ -15,6 +15,7 @@ import FormProposal from "./components/FormProposal";
 import RegisterCourse from "./components/RegisterCourse";
 import PaymentOnline from "./components/PaymentOnline";
 import StudentDebt from "./components/StudentDebt";
+import BillOnline from "./components/BillOnline";
 function App() {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const location = useLocation();
@@ -53,7 +54,9 @@ function App() {
 
       <div
         className={`${
-          location.pathname === "/sinh-vien-dang-nhap" ? " " : "bg-[#e7ecf0] "
+          location.pathname === "/sinh-vien-dang-nhap"
+            ? " "
+            : " h-max bg-[#e7ecf0] "
         }`}
       >
         {location.pathname === "/dashboard" ||
@@ -115,6 +118,7 @@ function App() {
             path="/thanh-toan-truc-tuyen"
             element={<PaymentOnline student={student} />}
           />
+          <Route path="/phieu-thu" element={<BillOnline student={student} />} />
         </Routes>
       </div>
     </div>
