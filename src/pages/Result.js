@@ -293,194 +293,35 @@ const Result = ({ student }) => {
 
   return (
     <div
-      className="learning-result z-40  px-3 py-3"
+      className="learning-result z-40 w-full p-2"
       style={{ minHeight: "100vh" }}
     >
       <h4 className=" uppercase font-bold text-[25px]  mb-3 mt-5 text-center">
         Kết quả học tập
       </h4>
-
-      {groupedData.length ? (
-        // <table className="data-table">
-        //   <thead>
-        //     <tr>
-        //       <th>STT</th>
-        //       <th>Mã lớp học phần</th>
-        //       <th>Tên môn học</th>
-        //       <th>Số tín chỉ</th>
-        //       <th>KTTX</th>
-        //       <th>
-        //         <div className="header-group py-3 flex flex-col">
-        //           <span>NTTD</span>
-        //           <hr />
-        //           <span>LT Hệ số 1</span>
-        //         </div>
-        //       </th>
-        //       <th>Giữa kỳ</th>
-        //       <th>Thực hành</th>
-        //       <th>Cuối kỳ</th>
-        //       <th>Điểm tổng kết</th>
-        //       <th>Thang điểm 4</th>
-        //       <th>Điểm chữ</th>
-        //       <th>Ghi chú</th>
-        //       <th>Ghi chú CK</th>
-        //       <th>Ghi chú TK</th>
-        //       <th>Đạt</th>
-        //     </tr>
-        //   </thead>
-
-        //   <tbody>
-        //     {groupedData.map((semester, index) => (
-        //       <>
-        //         <tr key={index} className="semester-row">
-        //           <td
-        //             colSpan="16"
-        //             className="semester-title text-start px-2 text-[#578ebe]"
-        //           >
-        //             Học kỳ {semester.hCK} - Năm {semester.nMHC}
-        //           </td>
-        //         </tr>
-
-        //         {semester?.itemPoints.map((subject, idx) => (
-        //           <tr
-        //             key={idx}
-        //             className={subject.status === "fail" ? "fail-row" : ""}
-        //           >
-        //             <td>{idx + 1}</td>
-        //             <td>{subject.lPHCPhN}</td>
-        //             <td>{subject.mNHC}</td>
-        //             <td>{subject.sTNCh}</td>
-        //             <td>{subject.kttx}</td>
-
-        //             <td>{subject.nttd}</td>
-        //             <td>{subject.giuaky}</td>
-
-        //             <td>{subject.thuchanh}</td>
-        //             <td>{subject.cuoiky}</td>
-        //             <td>{subject.tongket}</td>
-        //             <td>
-        //               {(() => {
-        //                 const gpa =
-        //                   Number(subject.tongket) >= 9
-        //                     ? 4.0
-        //                     : Number(subject.tongket) >= 8.5
-        //                     ? 3.7
-        //                     : Number(subject.tongket) >= 8
-        //                     ? 3.5
-        //                     : Number(subject.tongket) >= 7
-        //                     ? 3.0
-        //                     : Number(subject.tongket) >= 6.5
-        //                     ? 2.5
-        //                     : Number(subject.tongket) >= 5.5
-        //                     ? 2.0
-        //                     : Number(subject.tongket) >= 5
-        //                     ? 1.5
-        //                     : Number(subject.tongket) >= 4
-        //                     ? 1.0
-        //                     : 0;
-
-        //                 return gpa;
-        //               })()}
-        //             </td>
-
-        //             <td>
-        //               {(() => {
-        //                 const letterGrade =
-        //                   Number(subject.tongket) >= 9
-        //                     ? "A"
-        //                     : Number(subject.tongket) >= 8
-        //                     ? "B+"
-        //                     : Number(subject.tongket) >= 7
-        //                     ? "B"
-        //                     : Number(subject.tongket) >= 6
-        //                     ? "C+"
-        //                     : Number(subject.tongket) >= 5
-        //                     ? "C"
-        //                     : Number(subject.tongket) >= 4
-        //                     ? "D"
-        //                     : "F";
-
-        //                 return letterGrade;
-        //               })()}
-        //             </td>
-
-        //             <td>{subject.note || ""}</td>
-        //             <td>{subject.noteCK || ""}</td>
-        //             <td>{subject.noteTK || ""}</td>
-        //             <td>
-        //               {(() => {
-        //                 const letterGrade =
-        //                   Number(subject.tongket) >= 9
-        //                     ? "A"
-        //                     : Number(subject.tongket) >= 8
-        //                     ? "B+"
-        //                     : Number(subject.tongket) >= 7
-        //                     ? "B"
-        //                     : Number(subject.tongket) >= 6
-        //                     ? "C+"
-        //                     : Number(subject.tongket) >= 5
-        //                     ? "C"
-        //                     : Number(subject.tongket) >= 4
-        //                     ? "D"
-        //                     : "F";
-
-        //                 return (
-        //                   <>
-        //                     {letterGrade === "F" ? (
-        //                       <IoClose className="text-red-500 text-[30px]" />
-        //                     ) : (
-        //                       <TiTick className="text-green-400 text-[30px]" />
-        //                     )}
-        //                   </>
-        //                 );
-        //               })()}
-        //             </td>
-        //           </tr>
-        //         ))}
-
-        //         <tr className="">
-        //           <td colSpan="3" className="text-start px-2">
-        //             Điểm trung bình học kỳ: {semester.averageScore}
-        //           </td>
-        //           <td colSpan="2" className="text-start px-2">
-        //             Điểm trung bình học kỳ: {semester.averageScore}
-        //           </td>
-        //           <td colSpan="11"></td>
-        //         </tr>
-
-        //         <tr>
-        //           <td colSpan="3" className="text-start px-2">
-        //             Tổng số tín chỉ: {semester.totalCredits}
-        //           </td>
-        //           <td colSpan="2" className="text-start px-2">
-        //             Tổng số tín chỉ: {semester.totalCredits}
-        //           </td>
-        //           <td colSpan="11"></td>
-        //         </tr>
-        //       </>
-        //     ))}
-        //   </tbody>
-        // </table>
-
-        <Table
-          columns={columns}
-          dataSource={dataSource}
-          pagination={false}
-          rowClassName={(record) =>
-            record.isSemesterRow
-              ? "bg-gray-100 font-bold"
-              : record.isSummaryRow
-              ? "bg-gray-50 font-semibold"
-              : record.pass === "Fail"
-              ? "text-red-500"
-              : ""
-          }
-        />
-      ) : (
-        <p className="text-black font-bold text-center block mt-4 ">
-          Chưa có dữ liệu
-        </p>
-      )}
+      <div className="w-full overflow-x-auto sm:overflow-x-visible ">
+        {groupedData.length ? (
+          <Table
+            columns={columns}
+            dataSource={dataSource}
+            pagination={false}
+            scroll={{ x: "max-content" }}
+            rowClassName={(record) =>
+              record.isSemesterRow
+                ? "bg-gray-100 font-bold"
+                : record.isSummaryRow
+                ? "bg-gray-50 font-semibold"
+                : record.pass === "Fail"
+                ? "text-red-500"
+                : ""
+            }
+          />
+        ) : (
+          <p className="text-black font-bold text-center block mt-4 ">
+            Chưa có dữ liệu
+          </p>
+        )}
+      </div>
     </div>
   );
 };

@@ -13,23 +13,50 @@ const Schedule = ({ student }) => {
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [viewMode, setViewMode] = useState("all");
   const [registerCourses, setRegisterCourses] = useState([]);
+  const [schedule, setSchedule] = useState([]);
 
+  const fetchRegisterCourses = async () => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:8080/api/registerCourse/get-all-registerCourse"
+      );
+      setRegisterCourses(data);
+    } catch (error) {
+      console.error("Lỗi khi lấy dữ liệu khóa học:", error);
+    }
+  };
+
+  const fetchSchedule = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:8080/api/schedule/get-all-schedule"
+      );
+      setSchedule(res.data);
+    } catch (error) {
+      console.log("Lỗi khi tải dữ liệu!");
+    }
+  };
   useEffect(() => {
-    const fetchRegisterCourses = async () => {
-      try {
-        const { data } = await axios.get(
-          "http://localhost:8080/api/registerCourse/get-all-registerCourse"
-        );
-        setRegisterCourses(data);
-      } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu khóa học:", error);
-      }
-    };
-
     fetchRegisterCourses();
+    fetchSchedule();
   }, []);
-
   // Lọc danh sách khóa học của sinh viên hiện tại
+
+  const checkLichHocStudent = schedule.filter(
+    (item) =>
+      item.major === student?.education_info?.major &&
+      item.faculty === student?.education_info?.faculty
+  );
+
+  const filterLichThi = checkLichHocStudent?.filter(
+    (item) => item.loaiLichHoc === "Lịch thi"
+  );
+  const addStatus = filterLichThi?.map((item) => ({
+    _id: item._id,
+    course: { ...item },
+    status: true,
+  }));
+
   const studentCourses = useMemo(() => {
     if (!student) return [];
     return registerCourses.filter(
@@ -37,6 +64,7 @@ const Schedule = ({ student }) => {
     );
   }, [registerCourses, student]);
 
+  const combineArray = [...studentCourses, ...addStatus];
   const handleDateChange = (date) => setSelectedDate(date || dayjs());
   const handleViewModeChange = (e) => setViewMode(e.target.value);
   const handleCurrentDate = () => setSelectedDate(dayjs());
@@ -51,11 +79,13 @@ const Schedule = ({ student }) => {
     const selectedDay = selectedDate.startOf("week").add(index - 1, "day");
     const selectedDayOfWeek = selectedDay.day(); // 0: Chủ Nhật, 1: Thứ 2, ..., 6: Thứ 7
 
-    const dayCourses = studentCourses.filter((data) => {
+    const dayCourses = combineArray.filter((data) => {
       const startDate = dayjs(data?.course?.date);
       const endDate = startDate.add(data?.course?.course?.credits * 4, "week");
       const courseDayOfWeek = startDate.day();
-
+      if (data?.course?.loaiLichHoc === "Lịch thi") {
+        return selectedDay.isSame(startDate, "day");
+      }
       return (
         selectedDayOfWeek === courseDayOfWeek &&
         selectedDay.isBetween(startDate, endDate, "day", "[]")
@@ -136,17 +166,17 @@ const Schedule = ({ student }) => {
   };
 
   return (
-    <div className="w-1240" style={{ padding: "12px 0", minHeight: "100vh" }}>
-      <Row>
-        <Col sm={2} className="fside">
+    <div className="w-1240 p-2 w-full" style={{ minHeight: "100vh" }}>
+      <div className="flex gap-2">
+        <div className="hidden sm:block md:w-2/12">
           <FixedSidebar />
-        </Col>
-        <Col sm={10} xs={12} className="h-full">
+        </div>
+        <div className="h-full sm:w-full md:w-10/12 w-full ">
           <div className="bg-white h-max p-3 rounded-md">
             <span className="font-bold mb-3 block text-[20px]">
               <HeadingTitle title=" Lịch học, lịch thi theo tuần" />
             </span>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-col gap-2 sm:gap-2 md:gap-0 md:flex-row sm:items-start md:items-center justify-between">
               <Radio.Group
                 value={viewMode}
                 onChange={handleViewModeChange}
@@ -171,21 +201,23 @@ const Schedule = ({ student }) => {
                 <Button onClick={handleNextWeek}>Tiếp</Button>
               </div>
             </div>
-            <div className="w-full mt-4 h-full flex border border-gray-300">
-              <div className="grid grid-cols-8 w-full border-t h-full border-gray-300">
-                {[
-                  "Ca",
-                  "Thứ 2",
-                  "Thứ 3",
-                  "Thứ 4",
-                  "Thứ 5",
-                  "Thứ 6",
-                  "Thứ 7",
-                  "Chủ nhật",
-                ].map(renderDayColumn)}
+            <div className="w-full overflow-x-auto sm:overflow-x-visible ">
+              <div className="w-full sm:min-w-0 min-w-[1200px] mt-4 h-full flex border border-gray-300">
+                <div className="grid grid-cols-8 w-full border-t h-full border-gray-300">
+                  {[
+                    "Ca",
+                    "Thứ 2",
+                    "Thứ 3",
+                    "Thứ 4",
+                    "Thứ 5",
+                    "Thứ 6",
+                    "Thứ 7",
+                    "Chủ nhật",
+                  ].map(renderDayColumn)}
+                </div>
               </div>
             </div>
-            <div className="mt-4 flex gap-4 text-sm">
+            <div className="mt-4 flex flex-col sm:flex-col md:flex-row gap-4 text-sm">
               <div className="flex items-center gap-1">
                 <span className="w-4 h-4 bg-gray-300 inline-block" /> Lịch học
                 lý thuyết
@@ -207,8 +239,8 @@ const Schedule = ({ student }) => {
               </div>
             </div>
           </div>
-        </Col>
-      </Row>
+        </div>
+      </div>
     </div>
   );
 };

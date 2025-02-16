@@ -102,12 +102,12 @@ const FormProposal = ({ student }) => {
     },
   ];
   return (
-    <div className="w-1240 p-2 fix-side" style={{ minHeight: "100vh" }}>
-      <Row>
-        <Col sm={2}>
+    <div className="w-1240 p-2 w-full" style={{ minHeight: "100vh" }}>
+      <div className="flex gap-2">
+        <div className="hidden sm:block md:w-2/12">
           <FixedSidebar />
-        </Col>
-        <Col sm={10}>
+        </div>
+        <div className="w-full sm:w-full md:w-10/12">
           <div className="bg-white p-3 rounded-md">
             <HeadingTitle title="Đề xuất biểu mẫu" />
             <hr />
@@ -117,8 +117,8 @@ const FormProposal = ({ student }) => {
               pagination={false}
             />
           </div>
-        </Col>
-      </Row>
+        </div>
+      </div>
     </div>
   );
 };

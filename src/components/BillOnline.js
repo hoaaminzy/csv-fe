@@ -27,7 +27,6 @@ const BillOnline = ({ student }) => {
     fetcHById();
   }, [student?.student_id]); // Thêm student vào dependency để cập nhật khi nó thay đổi
 
-  console.log(paymentBy);
   const columns = [
     {
       title: "STT",
@@ -102,13 +101,16 @@ const BillOnline = ({ student }) => {
   ];
   const navigate = useNavigate();
   return (
-    <div className="w-1240 p-2 fix-side" style={{ minHeight: "100vh" }}>
-      <Row>
-        <Col sm={2} className="fside">
+    <div
+      className=" w-full md:w-[1240px] m-auto p-2 "
+      style={{ minHeight: "100vh" }}
+    >
+      <div className="flex gap-2 ">
+        <div className="hidden sm:block md:w-2/12">
           <FixedSidebar />
-        </Col>
-        <Col sm={10}>
-          <div className="bg-white p-3 rounded-md">
+        </div>
+        <div className="w-full  sm:w-full md:w-10/12">
+          <div className="bg-white p-3 w-full rounded-md">
             <div className="flex items-center justify-between">
               <HeadingTitle title="Phiếu thu" />
               <Button onClick={() => navigate("/thanh-toan-truc-tuyen")}>
@@ -116,14 +118,17 @@ const BillOnline = ({ student }) => {
               </Button>
             </div>
             <hr />
-            <Table
-              columns={columns}
-              dataSource={paymentBy}
-              pagination={false}
-            />
+            <div className="w-full overflow-x-auto sm:overflow-x-visible ">
+              <Table
+                columns={columns}
+                dataSource={paymentBy}
+                pagination={false}
+                scroll={{ x: "max-content" }}
+              />
+            </div>
           </div>
-        </Col>
-      </Row>
+        </div>
+      </div>
     </div>
   );
 };

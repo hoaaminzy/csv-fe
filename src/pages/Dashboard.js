@@ -156,15 +156,15 @@ const Dashboard = ({ student }) => {
   }));
 
   return (
-    <div className="w-1240 py-2  flex flex-col gap-3 dashboard">
-      <Row className="sm:h-full md:h-[242px] xl:h-[242px] lg:h-[242px] ">
-        <Col sm={7} className="h-full">
+    <div className="w-1240 py-2  flex flex-col sm:flex-col sm:gap-3 gap-3 dashboard">
+      <div className="sm:h-full md:gap-4  flex flex-col sm:flex-col  md:flex-row md:h-[242px] ">
+        <div className="h-full w-full sm:w-full mb-3 sm:mb-3 md:mb-0 md:w-7/12">
           <div className="bg-white h-full p-2 rounded-md">
-            <span className="text-[#667580] block pb-2 w-full border-b font-bold text-[20px]">
+            <span className="text-[#667580] block pb-2 w-full border-b font-bold text-[18px]">
               Thông tin sinh viên
             </span>
-            <Row className="mt-3">
-              <Col sm={3}>
+            <div className="mt-3 flex flex-col gap-3 sm:gap-3 md:gap-0 sm:flex-col  md:flex-row items-center">
+              <div className="sm:w-6/12  md:w-3/12">
                 <div className="flex flex-col gap-2 justify-center items-center h-full">
                   <img
                     src={student?.image}
@@ -179,61 +179,64 @@ const Dashboard = ({ student }) => {
                     Xem chi tiết
                   </Link>
                 </div>
-              </Col>
-              <Col sm={5}>
-                <div className="flex flex-col gap-2">
-                  <span className="text-[13px] text-[#667580]">
-                    MSSV: <strong>{student?.student_id}</strong>
-                  </span>
-                  <span className="text-[13px] text-[#667580]">
-                    Họ tên: <strong>{student?.full_name}</strong>
-                  </span>
-                  <span className="text-[13px] text-[#667580]">
-                    Giới tính: <strong>{student?.gender}</strong>
-                  </span>
-                  <span className="text-[13px] text-[#667580]">
-                    Ngày sinh:{" "}
-                    <strong>
-                      {student?.personal_info?.birth_date?.slice(0, 10)}
-                    </strong>
-                  </span>
-                  <span className="text-[13px] text-[#667580]">
-                    Nơi sinh:
-                    <strong>
-                      {student?.personal_info.permanent_address}
-                    </strong>{" "}
-                  </span>
+              </div>
+              <div className="sm:w-6/12 sm:mt-3 md:mt-0 sm:gap-2 justify-between w-full md:w-9/12 flex ">
+                <div className="sm:w-6/12">
+                  <div className="flex flex-col gap-2">
+                    <span className="text-[13px] text-[#667580]">
+                      MSSV: <strong>{student?.student_id}</strong>
+                    </span>
+                    <span className="text-[13px] text-[#667580]">
+                      Họ tên: <strong>{student?.full_name}</strong>
+                    </span>
+                    <span className="text-[13px] text-[#667580]">
+                      Giới tính: <strong>{student?.gender}</strong>
+                    </span>
+                    <span className="text-[13px] text-[#667580]">
+                      Ngày sinh:{" "}
+                      <strong>
+                        {student?.personal_info?.birth_date?.slice(0, 10)}
+                      </strong>
+                    </span>
+                    <span className="text-[13px] text-[#667580]">
+                      Nơi sinh:
+                      <strong>
+                        {student?.personal_info.permanent_address}
+                      </strong>{" "}
+                    </span>
+                  </div>
                 </div>
-              </Col>
-              <Col sm={4}>
-                <div className="flex flex-col gap-2">
-                  <span className="text-[13px] text-[#667580]">
-                    Lớp học: <strong>{student?.education_info.class}</strong>
-                  </span>
-                  <span className="text-[13px] text-[#667580]">
-                    {" "}
-                    Khóa học: <strong>{student?.education_info.course}</strong>
-                  </span>
-                  <span className="text-[13px] text-[#667580]">
-                    {" "}
-                    Bậc đào tạo:{" "}
-                    <strong>{student?.education_info.degree}</strong>
-                  </span>
-                  <span className="text-[13px] text-[#667580]">
-                    {" "}
-                    Loại hình đào tạo:{" "}
-                    <strong>{student?.education_info.education_type}</strong>
-                  </span>
-                  <span className="text-[13px] text-[#667580]">
-                    {" "}
-                    Ngành: <strong>{student?.education_info.major}</strong>
-                  </span>
+                <div className="sm:w-6/12">
+                  <div className="flex flex-col gap-2">
+                    <span className="text-[13px] text-[#667580]">
+                      Lớp học: <strong>{student?.education_info.class}</strong>
+                    </span>
+                    <span className="text-[13px] text-[#667580]">
+                      {" "}
+                      Khóa học:{" "}
+                      <strong>{student?.education_info.course}</strong>
+                    </span>
+                    <span className="text-[13px] text-[#667580]">
+                      {" "}
+                      Bậc đào tạo:{" "}
+                      <strong>{student?.education_info.degree}</strong>
+                    </span>
+                    <span className="text-[13px] text-[#667580]">
+                      {" "}
+                      Loại hình đào tạo:{" "}
+                      <strong>{student?.education_info.education_type}</strong>
+                    </span>
+                    <span className="text-[13px] text-[#667580]">
+                      {" "}
+                      Ngành: <strong>{student?.education_info.major}</strong>
+                    </span>
+                  </div>
                 </div>
-              </Col>
-            </Row>
+              </div>
+            </div>
           </div>
-        </Col>
-        <Col sm={5} className="flex flex-col h-full sm:mt-5  gap-3 ">
+        </div>
+        <div className="flex flex-col h-full w-full sm:w-full md:w-5/12  gap-3 ">
           <div className="w-full h-[50%] ">
             <div className="bg-white flex h-full flex-col justify-center p-2.5 rounded-md">
               <span className="text-[13px] text-[#667580]">
@@ -265,9 +268,9 @@ const Dashboard = ({ student }) => {
               </Link>
             </div>
           </div>
-        </Col>
-      </Row>
-      <Row>
+        </div>
+      </div>
+      <div>
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-8  xl:grid-cols-8  gap-3">
           <div className="bg-white  gap-3 w-[full] h-[130px]  rounded-md flex flex-col justify-center items-center">
             <Link
@@ -353,15 +356,14 @@ const Dashboard = ({ student }) => {
             </Link>
           </div>
         </div>
-      </Row>
-      <Row className="h-[350px]">
-        <Col sm={5} className="h-full">
+      </div>
+      <div className="flex flex-col gap-3 md:flex-row sm:h-full md:h-[350px] w-full xl:h-[350px]">
+        <div className="h-full w-full md:w-5/12">
           <div className="bg-white flex flex-col justify-between h-full rounded-md p-3">
             <div
               style={{ borderBottom: "1px solid silver" }}
               className="flex pb-2   justify-between items-center "
             >
-              {" "}
               <span className="text-[18px] font-bold">Kết quả học tập</span>
               <Dropdown menu={{ items }} trigger={["click"]}>
                 <span onClick={(e) => e.preventDefault()}>
@@ -376,8 +378,8 @@ const Dashboard = ({ student }) => {
               <Chart data={groupedData} selectedSemester={selectedSemester} />
             </div>
           </div>
-        </Col>
-        <Col sm={3} className="h-full">
+        </div>
+        <div className="w-full md:w-3/12 h-full">
           <div className="bg-white h-full rounded-md p-3">
             <div className=" pb-2" style={{ borderBottom: "1px solid silver" }}>
               {" "}
@@ -385,8 +387,8 @@ const Dashboard = ({ student }) => {
             </div>
             <SolidGaugeChart data={groupedData} />
           </div>
-        </Col>
-        <Col sm={4} className="h-full">
+        </div>
+        <div className="h-full w-full md:w-4/12">
           <div className="bg-white h-full rounded-md p-3">
             <div
               style={{ borderBottom: "1px solid silver" }}
@@ -416,8 +418,8 @@ const Dashboard = ({ student }) => {
               </div>
             </div>
           </div>
-        </Col>
-      </Row>
+        </div>
+      </div>
     </div>
   );
 };

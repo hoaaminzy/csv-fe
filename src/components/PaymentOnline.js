@@ -132,14 +132,17 @@ const PaymentOnline = ({ student }) => {
   };
 
   return (
-    <div className="w-1240" style={{ padding: "12px 0", minHeight: "100vh" }}>
-      <Row>
-        <Col sm={2} className="fside">
+    <div
+      className=" w-full md:w-[1240px] m-auto p-2 "
+      style={{ minHeight: "100vh" }}
+    >
+      <div className="flex gap-2 ">
+        <div className="hidden sm:block md:w-2/12">
           <FixedSidebar />
-        </Col>
-        <Col sm={10} xs={12} className="h-full">
+        </div>
+        <div className="w-full  sm:w-full md:w-10/12">
           <div className="bg-white h-max p-3 rounded-md">
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col md:flex-row justify-between sm:items-start md:items-center">
               <HeadingTitle title="Thanh toán trực tuyến" />
               <div>
                 <span>Đợt: </span>
@@ -232,8 +235,8 @@ const PaymentOnline = ({ student }) => {
               />
             </div>
           </div>
-        </Col>
-      </Row>
+        </div>
+      </div>
     </div>
   );
 };

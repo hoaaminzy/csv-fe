@@ -112,7 +112,7 @@ const MenuDashboard = () => {
   };
   return (
     <div
-      className="menu-dash  "
+      className="menu-dash hidden sm:block"
       style={{
         width: "100%",
       }}

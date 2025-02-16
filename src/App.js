@@ -16,6 +16,7 @@ import RegisterCourse from "./components/RegisterCourse";
 import PaymentOnline from "./components/PaymentOnline";
 import StudentDebt from "./components/StudentDebt";
 import BillOnline from "./components/BillOnline";
+import Footer from "./components/Footer";
 function App() {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const location = useLocation();
@@ -121,6 +122,7 @@ function App() {
           <Route path="/phieu-thu" element={<BillOnline student={student} />} />
         </Routes>
       </div>
+      <Footer />
     </div>
   );
 }

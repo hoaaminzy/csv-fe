@@ -214,7 +214,14 @@ const StudentDebt = ({ student }) => {
       <h4 className=" uppercase font-bold text-[25px]  mb-3 mt-5 text-center">
         công nợ sinh viên
       </h4>
-      <Table columns={columns} dataSource={data} pagination={false} />
+      <div className="w-full overflow-x-auto sm:overflow-x-visible ">
+        <Table
+          scroll={{ x: "max-content" }}
+          columns={columns}
+          dataSource={data}
+          pagination={false}
+        />
+      </div>
     </div>
   );
 };
